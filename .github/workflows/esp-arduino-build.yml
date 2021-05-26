@@ -1,5 +1,5 @@
 name: ESP32 Builder
-  on: [push]
+  on: push
   jobs:
     builder:
       name: Builder for test ESP32 project
