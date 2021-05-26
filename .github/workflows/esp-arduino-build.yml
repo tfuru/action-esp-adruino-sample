@@ -51,4 +51,4 @@ jobs:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: .pio/build/esp32dev/firmware.bin
         asset_name: firmware.bin
-        # asset_content_type: application/zip
+        asset_content_type: application/octet-stream
