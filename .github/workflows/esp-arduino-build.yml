@@ -1,22 +1,31 @@
-name: ESP32 Builder
-on: push
+name: PlatformIO CI
+
+on: [push]
+
 jobs:
-  builder:
-    name: Builder for test ESP32 project
-    runs-on: ubuntu-20.04
+  build:
+
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Install ESP-IDF
-        uses: CalinRadoni/esp-idf-v4-action@v2
-        with:
-          esp_idf_version: 'v4.1'
-
-      - name: Build
-        run: |
-          source ~/esp/esp-idf/export.sh
-          idf.py reconfigure
-          idf.py app
-          idf.py size
+    - uses: actions/checkout@v2
+    - name: Cache pip
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    - name: Cache PlatformIO
+      uses: actions/cache@v2
+      with:
+        path: ~/.platformio
+        key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+    - name: Set up Python
+      uses: actions/setup-python@v2
+    - name: Install PlatformIO
+      run: |
+        python -m pip install --upgrade pip
+        pip install --upgrade platformio
+    - name: Run PlatformIO
+      run: pio run -e <ID_1> -e <ID_2> -e <ID_N>
